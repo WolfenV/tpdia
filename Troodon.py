@@ -18,8 +18,8 @@ class Troodon:
         self._gpu_job_pool = self._device_suitability_classifier.get_gpu_job_pool()
         self._cpu_job_pool = self._speedup_predictor.predict(self._cpu_job_pool)
         self._gpu_job_pool = self._speedup_predictor.predict(self._gpu_job_pool)
-        self._job_pool = self.get_job_pool()
+        self._job_pool = self._get_job_pool()
         return self._job_pool
 
-    def get_job_pool(self):
+    def _get_job_pool(self):
         return [self._cpu_job_pool, self._gpu_job_pool]

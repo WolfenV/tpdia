@@ -1,6 +1,6 @@
 from Job import Job
 from KernelFeaturesSample import KernelFeaturesSample
-
+import numpy as np
 
 class DeviceSuitabilityClassifier:
     def __init__(self):
@@ -8,10 +8,32 @@ class DeviceSuitabilityClassifier:
         self._gpu_job_pool = []
 
     def classify(self, samples: KernelFeaturesSample):
-        pass
+        """
+        Input: samples
+        Function assign samples to CPU or GPU based on classification result
+        """
 
-    def get_cpu_job_pool(self) -> list[Job]:
-        pass
+        scaled_sample = []
 
-    def get_gpu_job_pool(self) -> list[Job]:
-        pass
+        for sample in samples:
+            # conversion to list
+            sample = list(sample.__dict__.values())    
+
+            for feature in sample:
+                # normalization of features
+                scaled_feature = (feature - np.min(sample)) / (np.max(sample) - np.min(sample)) 
+                scaled_sample.append(scaled_feature)
+
+            #if mean value of features is less then 0.5 sample goes to CPU, otherwise to GPU
+            if np.array(scaled_sample).mean() < 0.5:    
+                self._cpu_job_pool.append(sample)
+            else:
+                self._gpu_job_pool.append(sample)
+
+
+    def get_cpu_job_pool(self):
+        return self._cpu_job_pool
+
+
+    def get_gpu_job_pool(self):
+        return self._gpu_job_pool

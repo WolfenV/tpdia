@@ -8,8 +8,7 @@ class SpeedupPredictor:
     def predict(self, job_pool: list[Job]) -> list[Job]:
         self._job_pool = job_pool
         if len(self._job_pool) > 0:
-            if type(self._job_pool[0]) == CpuJob:
-                self._job_pool = job_pool
+            if type(self._job_pool[0]) == type(CpuJob):
                 self._job_pool.sort(key=lambda job: job.cpu_suitability)
             else:
                 self._job_pool.sort(key=lambda job: job.gpu_suitability, reverse=True)
